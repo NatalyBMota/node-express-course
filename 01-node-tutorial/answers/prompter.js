@@ -21,16 +21,23 @@ const getBody = (req, callback) => {
 };
 
 // here, you could declare one or more variables to store what comes back from the form.
-let item = "Enter something below.";
+let phrase = "Enter your name below.";
+let fName;
+let lName;
 
 // here, you can change the form below to modify the input fields and what is displayed.
 // This is just ordinary html with string interpolation.
 const form = () => {
   return `
   <body>
-  <p>${item}</p>
+  <p>${phrase}</p>
   <form method="POST">
-  <input name="item"></input>
+  <b>First Name:</b> <input name="firstName"></input>
+  <br />
+  <br />
+  <b>Last Name:</b> <input name="lastName"></input>
+  <br />
+  <br />
   <button type="submit">Submit</button>
   </form>
   </body>
@@ -43,13 +50,19 @@ const server = http.createServer((req, res) => {
   if (req.method === "POST") {
     getBody(req, (body) => {
       console.log("The body of the post is ", body);
+      fName = body["firstName"];
+      lName = body["lastName"];
+      
       // here, you can add your own logic
-      if (body["item"]) {
-        item = body["item"];
+      if (body["firstName"] && body["lastName"]) {
+        phrase = `<b>Hello, ${body["firstName"]} ${body["lastName"]}! It's so good of you to visit this web page!</b>`;
+      } else if (body["firstName"]){
+        phrase = `What is your last name, ${body["firstName"]}? You did not enter one!`;
+      } else if (body["lastName"]){
+        phrase = `What is your first name, ${body["lastName"]}? You did not enter one!`; 
       } else {
-        item = "Nothing was entered.";
-      }
-      // Your code changes would end here
+        phrase = "You did not enter a first name or a last name! Please enter them below.";
+      }      // Your code changes would end here
       res.writeHead(303, {
         Location: "/",
       });
