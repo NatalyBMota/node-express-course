@@ -1,11 +1,48 @@
 const express = require('express')
 const app = express()
-const { products } = require("./data")
+const { products, people } = require("./data")
+const logger = require('./logger')
+
 console.log('Express Tutorial')
 
 
-//middleware
-app.use(express.static('./public'))
+// middleware
+app.use(express.static('./methods-public'))
+app.use(logger)
+// parse form data
+app.use(express.urlencoded({ extended: false }));
+// parse into a JavaScript object (json)
+app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.send("Home Page")
+    res.end()
+})
+
+app.get('/api/v1/people', (req, res) => {
+    res.status(200).json({success: true, data:people})
+})
+
+
+app.post('/api/v1/people', (req, res) => {
+    const name = req.body.name
+    if (!name) {
+        return res.status(400).json({success: false, msg: 'Please provide name'})
+    }
+    people.push({ id: people.length + 1, name: req.body.name })
+    res.status(201).json({success: true, name: req.body.name, person: name})
+    // return res.status(201).json({ success: true, person: name })
+})
+
+app.post('/login', (req, res) => {
+    console.log(req.body)
+    const {name} = req.body
+    if (name) {
+        return res.status(200).send(`Welcome ${name}`)
+    }
+    res.status(401).send('Please Provide Credentials')
+    res.end()
+})
 
 app.get('/api/v1/test', (req, res) => {
     res.json({ message: "It worked!" })
