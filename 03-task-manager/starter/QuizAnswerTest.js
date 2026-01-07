@@ -12,9 +12,7 @@ const getTask = asyncWrapper(async (req, res, next) => {
     //next(error)
     //next(res.status(404).json({ msg: `No task with id: ${taskID}`}))
     // next(new CustomAPIError(`No task with id: ${taskID}`, 404))
-    /* Updated programming to reflect an idea from instructor provided code on
-    this week's lesson video at the 3:01:38 (three hour, one minute, and 38 second) mark. This code was then found in the controllers subfolder of the 
-    starter subfolder of the 03-task-manager folder, in the the task.js file.It also surrounded error handling. 
+    /* Updated programming to reflect an idea from instructor provided code on this week's lesson video at the 3:01:38 (three hour, one minute, and 38-second) mark. This code was then found in the controllers subfolder of the starter subfolder of the 03-task-manager folder, in the the task.js file. It also surrounded error handling. 
     */ 
     return next(createCustomError(`No task with id: ${taskID}`, 404))
   }  
