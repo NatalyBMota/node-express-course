@@ -1,0 +1,23 @@
+Question: In this lesson, you created a middleware function called asyncWrapper. Why?
+Answer: I created the middleware function asyncWrapper to wrap my controllers, and reduce repetition in my code; especially surrounding error handling for certain asynchornous operations; which was previously being done using the try catch block. That reduces the need for copying and pasting code. This can also be done with certain npm packages that reduce this set-up for us, but coding it in this manner gives us a general idea of what one these packages would be doing, and how they would function.
+
+Question: Suppose that you want to make sure that both a status code and an error message are sent back to the user when they request the URL for a task that does not exist. Assume that you’ve created a CustomAPIError class and an error handler that references that class. Complete the code:
+
+/* Suppose that you want to make sure that both a status code and an error message are sent back to the user when they request the URL for a task that does not exist. Assume that you’ve created a CustomAPIError class and an error handler that references that class. Complete the code:
+*/
+const getTask = asyncWrapper(async (req, res, next) => {  
+  const { id: taskID } = req.params;  
+
+  //awaiting to find this one task by its ID
+  const task = await Task.findOne({ _id: taskID });  
+
+  //if we are not successful
+  if (!task) {  
+    // your code here  
+    //next(error)
+    return next(createCustomError(`No task with id: ${taskID}`, 404))
+  }
+  //next(res.status(200).json({ task }));  
+  res.status(200).json({ task });
+});  
+
