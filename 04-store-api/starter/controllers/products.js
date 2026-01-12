@@ -2,7 +2,9 @@ const Product = require('../models/product')
 
 const getAllProductsStatic = async (req, res) => {
     // throw new Error('testing async errors')
-    const products = await Product.find({})
+    const products = await Product.find({
+        name: 'albany sectional',
+    })
     res.status(200).json({ products, nbHits: products.length })
 }
 
