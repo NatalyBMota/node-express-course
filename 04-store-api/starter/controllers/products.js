@@ -1,16 +1,15 @@
 const Product = require('../models/product')
 
 const getAllProductsStatic = async (req, res) => {
-    // throw new Error('testing async errors')
     const products = await Product.find({
-        name: 'albany sectional',
+        name: 'accent',
     })
     res.status(200).json({ products, nbHits: products.length })
 }
 
 const getAllProducts = async (req, res) => {
     // console.log(req.query)
-    const { featured, company } = req.query
+    const { featured, company, name } = req.query
     const queryObject = {}
 
     if (featured) {
