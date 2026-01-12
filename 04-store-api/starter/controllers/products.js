@@ -18,6 +18,9 @@ const getAllProducts = async (req, res) => {
     if (company) {
         queryObject.company = company
     }
+    if (name) {
+        queryObject.name = name
+    }
 
     // const products = await Product.find(req.query)
     console.log(queryObject)
