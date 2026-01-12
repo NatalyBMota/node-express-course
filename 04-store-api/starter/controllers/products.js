@@ -16,6 +16,9 @@ const getAllProducts = async (req, res) => {
     if (featured) {
         queryObject.featured = featured === 'true' ? true : false
     }
+    if (company) {
+        queryObject.company = company
+    }
 
     // const products = await Product.find(req.query)
     console.log(queryObject)
