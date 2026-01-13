@@ -1,7 +1,7 @@
 const Product = require('../models/product')
 
 const getAllProductsStatic = async (req, res) => {
-    const search = 'a'
+    const search = 'ab'
 
     // i in the options below just means case insensitive
     const products = await Product.find({
@@ -22,7 +22,7 @@ const getAllProducts = async (req, res) => {
         queryObject.company = company
     }
     if (name) {
-        queryObject.name = name
+        queryObject.name = {$regex: name, $options: 'i'}
     }
 
     // const products = await Product.find(req.query)
