@@ -15,7 +15,7 @@ const getAllProductsStatic = async (req, res) => {
         .skip(5) */
 
     const products = await Product.find({ price: { $gt: 30} })
-        .sort('name')
+        .sort('price')
         .select('name price')
 
     res.status(200).json({ products, nbHits: products.length })
