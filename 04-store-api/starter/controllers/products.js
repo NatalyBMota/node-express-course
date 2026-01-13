@@ -12,6 +12,7 @@ const getAllProductsStatic = async (req, res) => {
         .sort('name')
         .select('name price')
         .limit(10)
+        .skip(1)
     res.status(200).json({ products, nbHits: products.length })
 }
 
