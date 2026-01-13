@@ -1,12 +1,13 @@
 const Product = require('../models/product')
 
 const getAllProductsStatic = async (req, res) => {
-    const search = 'ab'
+    // const search = 'ab'
 
     // i in the options below just means case insensitive
-    const products = await Product.find({
+    /* const products = await Product.find({
         name: {$regex: search, $options: 'i'},
-    })
+    }) */
+   const products = await Product.find({}).sort('name')
     res.status(200).json({ products, nbHits: products.length })
 }
 
