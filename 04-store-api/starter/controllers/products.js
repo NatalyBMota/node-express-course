@@ -13,7 +13,7 @@ const getAllProductsStatic = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
     // console.log(req.query)
-    const { featured, company, name } = req.query
+    const { featured, company, name, sort } = req.query
     const queryObject = {}
 
     if (featured) {
@@ -27,8 +27,12 @@ const getAllProducts = async (req, res) => {
     }
 
     // const products = await Product.find(req.query)
-    console.log(queryObject)
-    const products = await Product.find(queryObject)
+    // console.log(queryObject)
+    let result = Product.find(queryObject)
+    if (sort) {
+        console.log(sort)
+    }
+    const products = await result
     // res.status(200).json({msg: 'products route'})
     res.status(200).json({ products, nbHits: products.length })
 }
