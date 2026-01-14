@@ -1,19 +1,6 @@
 const Product = require('../models/product')
 
 const getAllProductsStatic = async (req, res) => {
-    // const search = 'ab'
-
-    // i in the options below just means case insensitive
-    /* const products = await Product.find({
-        name: {$regex: search, $options: 'i'},
-    }) */
-    // const products = await Product.find({}).sort('-name price')
-    /* const products = await Product.find({})
-        .sort('name')
-        .select('name price')
-        .limit(10)
-        .skip(5) */
-
     const products = await Product.find({ price: { $gt: 30} })
         .sort('price')
         .select('name price')
@@ -22,8 +9,7 @@ const getAllProductsStatic = async (req, res) => {
 }
 
 const getAllProducts = async (req, res) => {
-    // console.log(req.query)
-    const { featured, company, name, sort, fields } = req.query
+    const { featured, company, name, sort, fields, numericFilters } = req.query
     const queryObject = {}
 
     if (featured) {
@@ -35,14 +21,35 @@ const getAllProducts = async (req, res) => {
     if (name) {
         queryObject.name = {$regex: name, $options: 'i'}
     }
+    if (numericFilters) {
+        const operatorMap = {
+            '>': '$gt',
+            '>=': '$gte',
+            '=': '$eq',
+            '<': '$lt',
+            '<=': '$lte',
+        }
+        const regEx = /\b(<|>|>=|=|<|<=)\b/g
+        // const regEx = /\b(>|>=|=|<|<=)\b/g
+        let filters = numericFilters.replace(
+            regEx, 
+            (match) =>`-${operatorMap[match]}-`
+        )
+        const options = ['price', 'rating']
+        filters = filters.split((',')).forEach((item) => {
+            const [field, operator, value] = item.split('-')
+            if (options.includes(field)) {
+                queryObject[field] = { [operator]: Number(value) }
+            }
+        })
+    }
 
     // const products = await Product.find(req.query)
-    // console.log(queryObject)
+    console.log(queryObject)
     let result = Product.find(queryObject)
 
     //sort
     if (sort) {
-        // console.log(sort)
         const sortList = sort.split(',').join(' ')
         result = result.sort(sortList)
     } else {
@@ -60,12 +67,8 @@ const getAllProducts = async (req, res) => {
     const skip = (page - 1) * limit
 
     result = result.skip(skip).limit(limit)
-    /* At the moment we have 23 products. So, if I decide to limit my response to only 7 items, how many pages do I have? Well, 23 / 7 is over 3, so we will have 4 pages. 7 * 3 is 21, so the last page will only have 2 items. 
-    If page is set to 1, we will skip 0 items. If page is set to 2 and limit is
-    set to 10, we will skip 10 items. If page is set to 3 and limit is set to 7, we will skip 14 items. */
 
     const products = await result
-    // res.status(200).json({msg: 'products route'})
     res.status(200).json({ products, nbHits: products.length })
 }
 
