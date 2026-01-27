@@ -1,27 +1,34 @@
+const Job = require('../models/Job')
+const { StatusCodes } = require('http-status-codes')
+const { BadRequestError, NotFoundError } = require('../errors')
+
+
 const getAllJobs = async (req, res) => {
-    res.send('get all jobs')
+    res.send('Get All Jobs')
 }
 
 const getJob = async (req, res) => {
-    res.send('get job')
+    res.send('Get Single Job')
 }
 
 const createJob = async (req, res) => {
-    res.send('create jobs')
+    req.body.createdBy = req.user.userId
+    const job = await Job.create(req.body)
+    res.status(StatusCodes.CREATED).json({ job })
 }
 
 const updateJob = async (req, res) => {
-    res.send('update job')
+    res.send('Update Job')
 }
 
 const deleteJob = async (req, res) => {
-    res.send('delete jobs')
+    res.send('Delete Job')
 }
 
 module.exports = {
-    getAllJobs,
-    getJob,
     createJob,
-    updateJob,
     deleteJob,
+    getAllJobs,
+    updateJob,
+    getJob,    
 }
